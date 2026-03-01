@@ -1,0 +1,62 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - path: data/data.csv
+      hash: md5
+      md5: 56a8d8ae619fcc223941e54f361b8406
+      size: 23278
+    - path: src/preprocess.py
+      hash: md5
+      md5: 3f43dd2e2bc36f267f4579501661df30
+      size: 1019
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 8ad5eaf4e867fe3cd66c609573619d12.dir
+      size: 24145
+      nfiles: 2
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 6175f5146a110488fa86f98d69276292
+      size: 19261
+    - path: src/train.py
+      hash: md5
+      md5: 4a706a8f2d959a7f0c3b40e953a27ee7
+      size: 1706
+    params:
+      params.yaml:
+        model_type: logreg
+    outs:
+    - path: models/model.joblib
+      hash: md5
+      md5: d16127d7d41149dc66d6a25521da266c
+      size: 1953
+  validate:
+    cmd: python src/validate.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: dde281662057ac79c96a18d8f00be0e4
+      size: 4884
+    - path: models/model.joblib
+      hash: md5
+      md5: d16127d7d41149dc66d6a25521da266c
+      size: 1953
+    - path: src/validate.py
+      hash: md5
+      md5: 362e66705b816fe3411dffc2bfb58956
+      size: 1351
+    outs:
+    - path: confusion_matrix.png
+      hash: md5
+      md5: 82247a3d60bd02a8b8c5174e9772470e
+      size: 17895
+    - path: metrics.json
+      hash: md5
+      md5: 862844e560ad8de5efd649ac7b94c9fa
+      size: 122

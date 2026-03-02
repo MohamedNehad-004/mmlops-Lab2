@@ -23,5 +23,6 @@ stages:
     - src/validate.py
     outs:
     - confusion_matrix.png
+    - plots/confusion_matrix.csv
     metrics:
     - metrics.json

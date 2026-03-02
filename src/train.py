@@ -1,7 +1,8 @@
 import os
-import json
 import joblib
+import yaml
 import pandas as pd
+
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -11,35 +12,28 @@ from sklearn.svm import SVC
 TRAIN_PATH = "data/processed/train.csv"
 MODEL_DIR = "models"
 MODEL_PATH = os.path.join(MODEL_DIR, "model.joblib")
-PARAMS_PATH = "params.json"
-
+PARAMS_PATH = "params.yaml"
 
 def load_params():
-    # default params if params.json not found
-    params = {"model_type": "logreg"}
+    params = {"model_type": "logreg"}  # default
     if os.path.exists(PARAMS_PATH):
         with open(PARAMS_PATH, "r") as f:
-            params.update(json.load(f))
+            params.update(yaml.safe_load(f) or {})
     return params
-
 
 def build_model(model_type: str):
     if model_type == "logreg":
         clf = LogisticRegression(max_iter=2000)
-        pipe = Pipeline([("scaler", StandardScaler()), ("clf", clf)])
-        return pipe
+        return Pipeline([("scaler", StandardScaler()), ("clf", clf)])
 
     if model_type == "rf":
-        clf = RandomForestClassifier(n_estimators=200, random_state=42)
-        return clf
+        return RandomForestClassifier(n_estimators=200, random_state=42)
 
     if model_type == "svc":
         clf = SVC(kernel="rbf", probability=True)
-        pipe = Pipeline([("scaler", StandardScaler()), ("clf", clf)])
-        return pipe
+        return Pipeline([("scaler", StandardScaler()), ("clf", clf)])
 
     raise ValueError("model_type must be one of: logreg, rf, svc")
-
 
 def main():
     os.makedirs(MODEL_DIR, exist_ok=True)
@@ -56,7 +50,6 @@ def main():
 
     joblib.dump(model, MODEL_PATH)
     print(f"Saved model: {MODEL_PATH} (model_type={model_type})")
-
 
 if __name__ == "__main__":
     main()

@@ -30,7 +30,7 @@ stages:
       size: 1706
     params:
       params.yaml:
-        model_type: logreg
+        model_type: rf
     outs:
     - path: models/model.joblib
       hash: md5

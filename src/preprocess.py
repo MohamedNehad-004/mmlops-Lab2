@@ -7,7 +7,6 @@ OUT_DIR = "data/processed"
 TRAIN_PATH = os.path.join(OUT_DIR, "train.csv")
 TEST_PATH = os.path.join(OUT_DIR, "test.csv")
 
-
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -19,7 +18,7 @@ def main():
 
     df = pd.read_csv(RAW_PATH, header=None, names=cols)
 
-    # Basic cleaning: remove duplicates, fill missing with median
+    # Basic cleaning
     df = df.drop_duplicates()
     df = df.fillna(df.median(numeric_only=True))
 
@@ -31,7 +30,6 @@ def main():
     test_df.to_csv(TEST_PATH, index=False)
 
     print(f"Saved: {TRAIN_PATH} and {TEST_PATH}")
-
 
 if __name__ == "__main__":
     main()
